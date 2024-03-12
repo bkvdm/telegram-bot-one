@@ -20,13 +20,17 @@ public class NotificationTask {
 
     private LocalDateTime localDateTime;
 
+    private String notification;
+
     public NotificationTask() {
+
     }
 
-    public NotificationTask(long id, Chat chat, LocalDateTime localDateTime) {
+    public NotificationTask(long id, Chat chat, LocalDateTime localDateTime, String notification) {
         this.id = id;
         this.chat = chat;
         this.localDateTime = localDateTime;
+        this.notification = notification;
     }
 
     public long getId() {
@@ -53,17 +57,25 @@ public class NotificationTask {
         this.localDateTime = localDateTime;
     }
 
+    public String getNotification() {
+        return notification;
+    }
+
+    public void setNotification(String notification) {
+        this.notification = notification;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotificationTask that = (NotificationTask) o;
-        return id == that.id && Objects.equals(chat, that.chat) && Objects.equals(localDateTime, that.localDateTime);
+        return id == that.id && Objects.equals(chat, that.chat) && Objects.equals(localDateTime, that.localDateTime) && Objects.equals(notification, that.notification);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, chat, localDateTime);
+        return Objects.hash(id, chat, localDateTime, notification);
     }
 
     @Override
@@ -72,6 +84,7 @@ public class NotificationTask {
                 "id=" + id +
                 ", chat=" + chat +
                 ", localDateTime=" + localDateTime +
+                ", notification='" + notification + '\'' +
                 '}';
     }
 }

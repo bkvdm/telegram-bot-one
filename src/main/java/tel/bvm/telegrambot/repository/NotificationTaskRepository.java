@@ -1,5 +1,7 @@
 package tel.bvm.telegrambot.repository;
 
-public interface NotificationTaskRepository extends JpaRepository<T, ID>{
+import tel.bvm.telegrambot.model.NotificationTask;
+
+public interface NotificationTaskRepository extends JpaRepository<T, NotificationTask>{
 
 }
