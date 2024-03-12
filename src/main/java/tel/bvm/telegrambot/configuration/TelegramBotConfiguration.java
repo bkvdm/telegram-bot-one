@@ -5,18 +5,25 @@ import com.pengrad.telegrambot.request.DeleteMyCommands;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import tel.bvm.telegrambot.TelegramBotApplication;
 
 @Configuration
 public class TelegramBotConfiguration {
 
-    @Value("${telegram.bot.token}")
-    private String token;
+    private final String token;
+
+    public TelegramBotConfiguration(@Value("${telegram.bot.token}") String token) {
+        this.token = token;
+    }
 
     @Bean
     public TelegramBot telegramBot() {
-        TelegramBot bot = new TelegramBot(token);
-        bot.execute(new DeleteMyCommands());
-        return bot;
+        TelegramBot telegramBot = new TelegramBot(token);
+        telegramBot.execute(new DeleteMyCommands());
+        return telegramBot;
     }
 }
+
+//    @Bean
+//    public TelegramBot telegramBot(@Value("${telegram.bot.token}") String token) {
+//        return new TelegramBot(token);
+//    }

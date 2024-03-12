@@ -16,7 +16,7 @@ public class NotificationTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private Chat chat;
+    private long chatId;
 
     private LocalDateTime localDateTime;
 
@@ -26,9 +26,9 @@ public class NotificationTask {
 
     }
 
-    public NotificationTask(long id, Chat chat, LocalDateTime localDateTime, String notification) {
+    public NotificationTask(long id, long chatId, LocalDateTime localDateTime, String notification) {
         this.id = id;
-        this.chat = chat;
+        this.chatId = chatId;
         this.localDateTime = localDateTime;
         this.notification = notification;
     }
@@ -41,12 +41,12 @@ public class NotificationTask {
         this.id = id;
     }
 
-    public Chat getChat() {
-        return chat;
+    public long getChatId() {
+        return chatId;
     }
 
-    public void setChat(Chat chat) {
-        this.chat = chat;
+    public void setChatId(long chatId) {
+        this.chatId = chatId;
     }
 
     public LocalDateTime getLocalDateTime() {
@@ -70,19 +70,19 @@ public class NotificationTask {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotificationTask that = (NotificationTask) o;
-        return id == that.id && Objects.equals(chat, that.chat) && Objects.equals(localDateTime, that.localDateTime) && Objects.equals(notification, that.notification);
+        return id == that.id && Objects.equals(chatId, that.chatId) && Objects.equals(localDateTime, that.localDateTime) && Objects.equals(notification, that.notification);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, chat, localDateTime, notification);
+        return Objects.hash(id, chatId, localDateTime, notification);
     }
 
     @Override
     public String toString() {
         return "NotificationTask{" +
                 "id=" + id +
-                ", chat=" + chat +
+                ", chat=" + chatId +
                 ", localDateTime=" + localDateTime +
                 ", notification='" + notification + '\'' +
                 '}';
