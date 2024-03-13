@@ -56,7 +56,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                 if ("/start".equals(notificationUserText)) {
                     sendMessage(chatId, """
                             Привет! 
-                            Чтобы создать напоминание, сообщии мне дату, время (с точностью до минуты) и текст напоминания в формате: 
+                            Чтобы создать напоминание, сообщи мне дату, время (с точностью до минуты) и текст напоминания в формате: 
                             12.03.2024 22:05:09 Выполнить курсовую работу
                             """);
 //                    SendResponse sendResponse = telegramBot.execute(sendMessage);
