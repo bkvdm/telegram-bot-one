@@ -22,12 +22,13 @@ public class NotificationTaskTimer {
         this.telegramBot = telegramBot;
     }
 
-    @Scheduled(fixedRate = 1, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     public void task() {
-        notificationTaskRepository.findAllByNotificationDateTime(
+        notificationTaskRepository.findAllByLocalDateTime(
                 LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES)
         ).forEach(notificationTask -> {
-            telegramBot.execute(new SendMessage(notificationTask.getId(), notificationTask.getNotification()));
+            telegramBot.execute(
+                    new SendMessage(notificationTask.getChatId(), "Напоминие о событии: " + notificationTask.getNotification()));
             notificationTaskRepository.delete(notificationTask);
         });
     }
