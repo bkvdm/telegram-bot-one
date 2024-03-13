@@ -1,25 +1,28 @@
 package tel.bvm.telegrambot.model;
 
 import com.pengrad.telegrambot.model.Chat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity
+//@Entity
+//@Table(name = "notification_task")
+@Entity(name = "notification_task")
+//@Table(name = "notification_task")
 public class NotificationTask {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "chat_id", nullable = false)
     private long chatId;
 
+    @Column(name = "notification_date_time", nullable = false)
     private LocalDateTime localDateTime;
 
+    @Column(name = "notification", nullable = false)
     private String notification;
 
     public NotificationTask() {

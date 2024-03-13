@@ -9,10 +9,10 @@ import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import com.pengrad.telegrambot.model.Update;
+import tel.bvm.telegrambot.model.NotificationTask;
+import tel.bvm.telegrambot.service.NotificationTaskService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -30,11 +30,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 //    private final Pattern pattern = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d [а-яА-Я\\s]+");
 
     private final Pattern pattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d) ([а-яА-Я\\s]+)");
-    @Autowired
+//    @Autowired
     private final TelegramBot telegramBot;
+    private final NotificationTaskService notificationTaskService;
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot) {
+    public TelegramBotUpdatesListener(TelegramBot telegramBot, NotificationTaskService notificationTaskService) {
         this.telegramBot = telegramBot;
+        this.notificationTaskService = notificationTaskService;
     }
 
     @PostConstruct
@@ -70,6 +72,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             sendMessage(chatId, "Некорректный формат даты или времени события");
                         } else {
                             String notification = matcher.group(2);
+                            NotificationTask notificationTask = new NotificationTask();
+                            notificationTask.setChatId(chatId);
+                            notificationTask.setNotification(notification);
+                            notificationTask.setLocalDateTime(dateTime);
+                            notificationTaskService.save(notificationTask);
+                            sendMessage(chatId, "Напоминание добавлено");
                         }
 
 //                        if (Objects.isNull(notification)) {
@@ -102,6 +110,5 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             return null;
         }
     }
-
 //    private final DateTimeFormatter dataTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 }
