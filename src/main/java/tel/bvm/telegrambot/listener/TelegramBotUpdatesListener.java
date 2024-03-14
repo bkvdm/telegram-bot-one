@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import com.pengrad.telegrambot.model.Update;
 import tel.bvm.telegrambot.model.NotificationTask;
+import tel.bvm.telegrambot.repository.NotificationTaskRepository;
 import tel.bvm.telegrambot.service.NotificationTaskService;
 
 import java.time.LocalDateTime;
@@ -29,10 +30,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
 //    private final Pattern pattern = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d [а-яА-Я\\s]+");
 
-    private final Pattern pattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d) ([а-яА-Я\\s]+)");
-//    @Autowired
+    //    private final Pattern pattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d) ([а-яА-Я\\s]+)");
+    private final Pattern pattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d) ([а-яА-Яа-яА-Я\\\\s]+|\\\\w+)");
+    //    @Autowired
     private final TelegramBot telegramBot;
     private final NotificationTaskService notificationTaskService;
+
+    private NotificationTaskRepository notificationTaskRepository;
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot, NotificationTaskService notificationTaskService) {
         this.telegramBot = telegramBot;
@@ -45,8 +49,24 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     }
 
     @Override
+    public void allNotificationInfo() {
+        notificationTaskRepository.findAll().stream().forEach(
+                notificationTask -> sendMessage(
+                        notificationTask.getChatId(),
+                        notificationTask.getNotification())
+        );
+    }
+
+    @Override
     public int process(List<Update> updates) {
         try {
+//            updates.stream()
+//                    .filter(update -> update.message() != null)
+//                    .forEach(update -> {
+//                        logger.info("Processing update: {}", update);
+//                        Message message = update.message();
+//                        Long chatId = message.chat().id();
+//                        String notificationUserText = message.text();
             updates.forEach(update -> {
                 logger.info("Processing update: {}", update);
                 Message message = update.message();
@@ -79,7 +99,6 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             notificationTaskService.save(notificationTask);
                             sendMessage(chatId, "Напоминание добавлено");
                         }
-
 //                        if (Objects.isNull(notification)) {
 //                            sendMessage(chatId, "Некорректный формат текста события");
 //                        }
