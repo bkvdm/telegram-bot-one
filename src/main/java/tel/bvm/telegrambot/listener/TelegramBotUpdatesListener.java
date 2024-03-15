@@ -30,22 +30,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
 
-//    private final Pattern pattern = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d [а-яА-Я\\s]+");
-
-    //    private final Pattern pattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d) ([а-яА-Я\\s]+)");
     private final Pattern pattern = Pattern.compile("(\\d{2}\\.\\d{2}\\.\\d{4} (?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d) ([а-яА-Яа-яА-Я\\\\s]+|\\\\w+)");
-    //    @Autowired
+
     private final TelegramBot telegramBot;
     private final NotificationTaskService notificationTaskService;
 
-//    @Autowired
     private final NotificationTaskRepository notificationTaskRepository;
-
-//    public TelegramBotUpdatesListener(TelegramBot telegramBot, NotificationTaskService notificationTaskService) {
-//        this.telegramBot = telegramBot;
-//        this.notificationTaskService = notificationTaskService;
-//    }
-
 
     public TelegramBotUpdatesListener(TelegramBot telegramBot, NotificationTaskService notificationTaskService, NotificationTaskRepository notificationTaskRepository) {
         this.telegramBot = telegramBot;
@@ -53,31 +43,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         this.notificationTaskRepository = notificationTaskRepository;
     }
 
-
     @PostConstruct
     public void init() {
         telegramBot.setUpdatesListener(this);
     }
 
-//    @Bean
-//    public void allNotificationInfo() {
-//        notificationTaskRepository.findAll().forEach(
-//                notificationTask -> sendMessage(
-//                        notificationTask.getChatId(),
-//                        notificationTask.getNotification())
-//        );
-//    }
-
     @Override
     public int process(List<Update> updates) {
         try {
-//            updates.stream()
-//                    .filter(update -> update.message() != null)
-//                    .forEach(update -> {
-//                        logger.info("Processing update: {}", update);
-//                        Message message = update.message();
-//                        Long chatId = message.chat().id();
-//                        String notificationUserText = message.text();
             updates.forEach(update -> {
                 logger.info("Processing update: {}", update);
                 Message message = update.message();
@@ -90,13 +63,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             Чтобы создать напоминание, сообщи мне дату, время (с точностью до минуты) и текст напоминания в формате: 
                             12.03.2024 22:05:09 Выполнить курсовую работу
                             """);
-//                    SendResponse sendResponse = telegramBot.execute(sendMessage);
-//                    sendMessage(chatId, text);
-//                    if (!sendResponse.isOk()) {
-//                        logger.error("Error sending message {}", sendResponse.description());
-//                    }
                 } else if (notificationUserText != null && !"/allNotificationInfo".equals(notificationUserText)) {
-//                } else if (notificationUserText != null) {
                     Matcher matcher = pattern.matcher(notificationUserText);
                     if (matcher.find()) {
                         LocalDateTime dateTime = parse(matcher.group(1));
@@ -111,14 +78,10 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             notificationTaskService.save(notificationTask);
                             sendMessage(chatId, "Напоминание добавлено");
                         }
-//                        if (Objects.isNull(notification)) {
-//                            sendMessage(chatId, "Некорректный формат текста события");
-//                        }
                     } else {
                         sendMessage(chatId, "Некорректный формат напоминания");
                     }
                 } else if ("/allNotificationInfo".equals(notificationUserText)) {
-//                    allNotificationInfo();
                     notificationTaskRepository.findAll().forEach(
                             notificationTask -> sendMessage(
                                     notificationTask.getChatId(),
@@ -147,5 +110,4 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             return null;
         }
     }
-//    private final DateTimeFormatter dataTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 }
