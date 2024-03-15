@@ -85,8 +85,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 //                    if (!sendResponse.isOk()) {
 //                        logger.error("Error sending message {}", sendResponse.description());
 //                    }
-//                } else if (notificationUserText != null && !"/allNotificationInfo".equals(notificationUserText)) {
-                } else if (notificationUserText != null) {
+                } else if (notificationUserText != null && !"/allNotificationInfo".equals(notificationUserText)) {
+//                } else if (notificationUserText != null) {
                     Matcher matcher = pattern.matcher(notificationUserText);
                     if (matcher.find()) {
                         LocalDateTime dateTime = parse(matcher.group(1));
@@ -107,8 +107,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     } else {
                         sendMessage(chatId, "Некорректный формат напоминания");
                     }
-//                } else if ("/allNotificationInfo".equals(notificationUserText)) {
+                } else if ("/allNotificationInfo".equals(notificationUserText)) {
 //                    allNotificationInfo();
+                    notificationTaskRepository.findAll().forEach(
+                            notificationTask -> sendMessage(
+                                    notificationTask.getChatId(),
+                                    notificationTask.getNotification()));
                 }
             });
         } catch (Exception e) {
