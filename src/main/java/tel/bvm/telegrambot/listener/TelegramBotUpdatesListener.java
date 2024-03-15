@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import com.pengrad.telegrambot.model.Update;
@@ -37,12 +38,21 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final TelegramBot telegramBot;
     private final NotificationTaskService notificationTaskService;
 
-    private NotificationTaskRepository notificationTaskRepository;
+//    @Autowired
+    private final NotificationTaskRepository notificationTaskRepository;
 
-    public TelegramBotUpdatesListener(TelegramBot telegramBot, NotificationTaskService notificationTaskService) {
+//    public TelegramBotUpdatesListener(TelegramBot telegramBot, NotificationTaskService notificationTaskService) {
+//        this.telegramBot = telegramBot;
+//        this.notificationTaskService = notificationTaskService;
+//    }
+
+
+    public TelegramBotUpdatesListener(TelegramBot telegramBot, NotificationTaskService notificationTaskService, NotificationTaskRepository notificationTaskRepository) {
         this.telegramBot = telegramBot;
         this.notificationTaskService = notificationTaskService;
+        this.notificationTaskRepository = notificationTaskRepository;
     }
+
 
     @PostConstruct
     public void init() {
