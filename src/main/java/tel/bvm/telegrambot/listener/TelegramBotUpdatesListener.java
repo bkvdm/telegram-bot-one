@@ -9,6 +9,7 @@ import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import com.pengrad.telegrambot.model.Update;
 import tel.bvm.telegrambot.model.NotificationTask;
@@ -48,14 +49,14 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         telegramBot.setUpdatesListener(this);
     }
 
-    @Override
-    public void allNotificationInfo() {
-        notificationTaskRepository.findAll().stream().forEach(
-                notificationTask -> sendMessage(
-                        notificationTask.getChatId(),
-                        notificationTask.getNotification())
-        );
-    }
+//    @Bean
+//    public void allNotificationInfo() {
+//        notificationTaskRepository.findAll().forEach(
+//                notificationTask -> sendMessage(
+//                        notificationTask.getChatId(),
+//                        notificationTask.getNotification())
+//        );
+//    }
 
     @Override
     public int process(List<Update> updates) {
@@ -84,6 +85,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 //                    if (!sendResponse.isOk()) {
 //                        logger.error("Error sending message {}", sendResponse.description());
 //                    }
+//                } else if (notificationUserText != null && !"/allNotificationInfo".equals(notificationUserText)) {
                 } else if (notificationUserText != null) {
                     Matcher matcher = pattern.matcher(notificationUserText);
                     if (matcher.find()) {
@@ -105,6 +107,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     } else {
                         sendMessage(chatId, "Некорректный формат напоминания");
                     }
+//                } else if ("/allNotificationInfo".equals(notificationUserText)) {
+//                    allNotificationInfo();
                 }
             });
         } catch (Exception e) {
